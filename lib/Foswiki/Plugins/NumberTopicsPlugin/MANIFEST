@@ -1,0 +1,5 @@
+!noci
+data/System/NumberTopicsPlugin.txt 0644 Documentation page
+lib/Foswiki/Plugins/NumberTopicsPlugin.pm 0444 Perl module
+lib/Foswiki/Plugins/NumberTopicsPlugin/Grinder.pm 0444 Perl module
+lib/Foswiki/Plugins/NumberTopicsPlugin/Config.spec 0444 Configuration

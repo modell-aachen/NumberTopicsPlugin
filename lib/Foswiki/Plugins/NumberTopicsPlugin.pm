@@ -56,6 +56,8 @@ sub beforeSaveHandler {
 
     my $fieldname = $Foswiki::cfg{Plugins}{NumberTopicsPlugin}{FieldName} || 'Number';
     my $formreg = $Foswiki::cfg{Plugins}{NumberTopicsPlugin}{Form} || '^DocumentForm$';
+    my $condition = $Foswiki::cfg{Plugins}{NumberTopicsPlugin}{Condition};
+    my $admins = $Foswiki::cfg{Plugins}{NumberTopicsPlugin}{NumberAdminGroup} || 'AdminGroup';
     my $query = Foswiki::Func::getCgiQuery();
 
     my $form = $meta->get( 'FORM' );
@@ -64,9 +66,27 @@ sub beforeSaveHandler {
 
     # check if document already has a number;
     # do not use template number
-    unless($query->param('templatetopic')) {
-        my $number = $meta->get( 'FIELD', $fieldname );
-        return if $number && $number->{value};
+    my $number = $meta->get( 'FIELD', $fieldname );
+    my $numberValue;
+    if ( $number && ($numberValue = $number->{value}) ) {
+        if($query->param('templatetopic')) {
+            $meta->remove( 'FIELD', $fieldname );
+            $numberValue = '';
+        }
+        unless( Foswiki::Func::isGroupMember( $admins ) || Foswiki::Func::isAnAdmin() ) {
+            if( Foswiki::Func::topicExists( $web, $topic ) ) {
+                my ($oldMeta, $oldText) = Foswiki::Func::readTopic( $web, $topic );
+                my $oldNumber = $oldMeta->get( 'FIELD', $fieldname );
+                die "Number changed from ".(($oldNumber)?$oldNumber->{value}:"''")." to $numberValue" unless ($oldNumber && $oldNumber->{value} eq $numberValue);
+            }
+        }
+        return if $numberValue; # false if templatetopic
+    }
+
+    # check if condition is met
+    if(defined $condition && $condition !~ m#^\s*$#) {
+        my $evalueated = Foswiki::Func::expandCommonVariables($condition, $topic, $web, $meta);
+        return unless $evalueated;
     }
 
     # get number from deamon

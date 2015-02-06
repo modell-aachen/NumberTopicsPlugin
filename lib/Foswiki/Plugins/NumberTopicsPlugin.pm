@@ -29,6 +29,16 @@ sub initPlugin {
     return 1;
 }
 
+sub beforeEditHandler {
+    my ( $text, $topic, $web, $meta ) = @_;
+
+    my $query = Foswiki::Func::getCgiQuery();
+    if($meta && $query->param('templatetopic')) {
+        my $fieldname = $Foswiki::cfg{Plugins}{NumberTopicsPlugin}{FieldName} || 'Number';
+        $meta->remove( 'FIELD', $fieldname );
+    }
+}
+
 =begin TML
 
 ---++ beforeSaveHandler($text, $topic, $web, $meta )

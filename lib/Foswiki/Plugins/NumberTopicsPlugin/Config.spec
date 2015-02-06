@@ -17,3 +17,6 @@ $Foswiki::cfg{Plugins}{NumberTopicsPlugin}{NumberAdminGroup} = 'AdminGroup';
 #** STRING **
 # Only Generate a number if this condition is empty (disabled) or expands to perl-true.
 $Foswiki::cfg{Plugins}{NumberTopicsPlugin}{Condition} = '';
+#** NUMBER **
+# The number will be padded with zeros up to this many places.
+$Foswiki::cfg{Plugins}{NumberTopicsPlugin}{padding} = 0;

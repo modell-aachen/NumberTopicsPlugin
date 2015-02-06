@@ -101,6 +101,13 @@ sub beforeSaveHandler {
         Foswiki::Func::writeWarning("Received no number for $web.$topic!");
         return;
     }
+
+    # padding
+    my $padding = $Foswiki::cfg{Plugins}{NumberTopicsPlugin}{padding};
+    if($padding) {
+        $value = sprintf("%0${padding}d", $value);
+    }
+
     # save number
     $meta->putKeyed( 'FIELD', { name=>$fieldname, title=>$fieldname, value=>$value } );
 }

@@ -20,3 +20,6 @@ $Foswiki::cfg{Plugins}{NumberTopicsPlugin}{Condition} = '';
 #** NUMBER **
 # The number will be padded with zeros up to this many places.
 $Foswiki::cfg{Plugins}{NumberTopicsPlugin}{padding} = 0;
+#** BOOLEAN **
+# This will cause this plugin to do nothing.
+$Foswiki::cfg{Plugins}{NumberTopicsPlugin}{Disabled} = 0;

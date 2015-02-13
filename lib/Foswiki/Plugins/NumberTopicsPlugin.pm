@@ -32,6 +32,8 @@ sub initPlugin {
 sub beforeEditHandler {
     my ( $text, $topic, $web, $meta ) = @_;
 
+    return if $Foswiki::cfg{Plugins}{NumberTopicsPlugin}{Disabled};
+
     my $query = Foswiki::Func::getCgiQuery();
     if($meta && $query->param('templatetopic')) {
         my $fieldname = $Foswiki::cfg{Plugins}{NumberTopicsPlugin}{FieldName} || 'Number';
@@ -53,6 +55,8 @@ This handler will embed the number, if it is not already present.
 
 sub beforeSaveHandler {
     my ( $text, $topic, $web, $meta ) = @_;
+
+    return if $Foswiki::cfg{Plugins}{NumberTopicsPlugin}{Disabled};
 
     my $fieldname = $Foswiki::cfg{Plugins}{NumberTopicsPlugin}{FieldName} || 'Number';
     my $formreg = $Foswiki::cfg{Plugins}{NumberTopicsPlugin}{Form} || '^DocumentForm$';

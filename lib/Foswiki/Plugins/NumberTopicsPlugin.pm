@@ -89,14 +89,10 @@ sub beforeSaveHandler {
         return unless $evalueated;
     }
 
-    # get number from deamon
-    my $response = Foswiki::Plugins::TaskDaemonPlugin::send('', 'get_new_number', 'NumberTopicsPlugin', 1);
+    # get number from -deamon- me, its ME who gets the number! Me ME MEEEEE!
+    my $response = _getNumber();
 
-    unless($response) {
-        Foswiki::Func::writeWarning("Got no response from deamon!");
-        return;
-    }
-    my $value = $response->{data};
+    my $value = $response;
     unless($value) {
         Foswiki::Func::writeWarning("Received no number for $web.$topic!");
         return;
@@ -112,6 +108,36 @@ sub beforeSaveHandler {
     $meta->putKeyed( 'FIELD', { name=>$fieldname, title=>$fieldname, value=>$value } );
 }
 
+sub _getNumber {
+    my $file = $Foswiki::cfg{Plugins}{NumberTopicsPlugin}{NumberFile};
+    unless ($file) {
+        Foswiki::Func::writeWarning("No NumberFile configured");
+        return undef;
+    }
+    my $returnValue;
+    my $exist = (( -e $file ) ? 1 : 0 );
+    open FILE, "+<", $file;
+    flock(FILE, 2);
+    unless( $exist ) {
+        $returnValue = '0';
+    } else {
+        my @lines = <FILE>;
+        if(scalar @lines) {
+            $returnValue = $lines[0];
+        } else {
+            $returnValue = '0';
+        }
+        seek FILE, 0, 0;
+        truncate(FILE, 0);
+    }
+
+    $returnValue++;
+
+    print FILE $returnValue;
+    close(FILE);
+
+    return $returnValue;
+}
 
 1;
 

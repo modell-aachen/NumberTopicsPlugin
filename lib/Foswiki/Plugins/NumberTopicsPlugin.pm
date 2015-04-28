@@ -16,6 +16,8 @@ our $SHORTDESCRIPTION = 'Create a unique number in the document form for each to
 
 our $NO_PREFS_IN_TOPIC = 1;
 
+our $lastIndexedMeta;
+
 sub initPlugin {
     my ( $topic, $web, $user, $installWeb ) = @_;
 
@@ -25,6 +27,21 @@ sub initPlugin {
             __PACKAGE__, ' and Plugins.pm' );
         return 0;
     }
+
+    # Copy/Paste/Modify from MetaCommentPlugin
+    # SMELL: this is not reliable as it depends on plugin order
+    # if (Foswiki::Func::getContext()->{SolrPluginEnabled}) {
+    if ($Foswiki::cfg{Plugins}{SolrPlugin}{Enabled}) {
+      require Foswiki::Plugins::SolrPlugin;
+      Foswiki::Plugins::SolrPlugin::registerIndexAttachmentHandler(
+        \&indexAttachmentHandler
+      );
+      Foswiki::Plugins::SolrPlugin::registerIndexTopicHandler(
+        \&indexTopicHandler
+      );
+    }
+
+    undef $lastIndexedMeta;
 
     return 1;
 }
@@ -141,6 +158,50 @@ sub _getNumber {
     close(FILE);
 
     return $returnValue;
+}
+
+sub _index {
+    my ($meta, $doc) = @_;
+
+    my $fieldname = $Foswiki::cfg{Plugins}{NumberTopicsPlugin}{FieldName} || 'Number';
+    my $formreg = $Foswiki::cfg{Plugins}{NumberTopicsPlugin}{Form} || '^DocumentForm$';
+
+    my $form = $meta->get( 'FORM' );
+    return unless $form;
+    return unless $form->{name} =~ m#$formreg#;
+
+    my $number = $meta->get( 'FIELD', $fieldname );
+    return unless defined $number;
+    $number = $number->{value};
+    return unless $number && $number =~ m#(\d+)#;
+    $number = $1;
+    my $solrfield = "field_${fieldname}_short_lst";
+    $doc->add_fields( $solrfield => $number );
+
+    while($number =~ s#^0##) {
+        $doc->add_fields( $solrfield => $number ) unless $number eq '';
+    }
+}
+
+sub indexTopicHandler {
+    my ($indexer, $doc, $web, $topic, $meta, $text) = @_;
+
+    _index($meta, $doc);
+    $lastIndexedMeta = $meta;
+}
+
+sub indexAttachmentHandler {
+    my ($indexer, $doc, $web, $topic, $attachment) = @_;
+
+    my $meta;
+    if($lastIndexedMeta && $lastIndexedMeta->web() eq $web && $lastIndexedMeta->topic() eq $topic) {
+        $meta = $lastIndexedMeta;
+    } else {
+        my $text;
+        ($meta, $text) = Foswiki::Func::readTopic($web, $topic);
+    }
+
+    _index($meta, $doc);
 }
 
 1;

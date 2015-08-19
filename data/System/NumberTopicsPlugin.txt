@@ -44,6 +44,15 @@ Parameters:
 | UniqueNr | unique | | skip="(none), No \"magic\" here!" | Unique topic number | |
 </verbatim> |
 
+---+++ Randomunique
+
+This field will be filled with a random unique number. A =%%NOP%SEARCH{...}%%NOP%= will be performed to find dublicates when saving the topic.
+
+Parameters:
+| *Name* | *Explaination* | *Example* |
+| =skip= | These words can be entered (if in ={NumberAdminGroup}=) in randomunique fields of all topics (they are _not_ unique).%BR%See =unique= | See =unique= |
+| =condition= | See =autoincrement=. | See =autoincrement=. |
+
 ---++ Implicit numbering
 
 When setting ={Plugins}{NumberTopicsPlugin}{Form}= and ={Plugins}{NumberTopicsPlugin}{FormField}= in configure, all field matching will be handleled as if they were of the type =autoincrement=

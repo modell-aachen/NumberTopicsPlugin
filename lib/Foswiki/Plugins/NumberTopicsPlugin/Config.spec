@@ -28,5 +28,5 @@ $Foswiki::cfg{Plugins}{NumberTopicsPlugin}{Disabled} = 0;
 # <p> Defaults to <i>(will be automatically assigned)</i></p>
 $Foswiki::cfg{Plugins}{NumberTopicsPlugin}{EmptyFieldMessage} = '';
 #** STRING **
-# These words will be skipped for unique fields.
+# These words will be skipped for unique/randomuniqe fields.
 $Foswiki::cfg{Plugins}{NumberTopicsPlugin}{UniqueSkip} = '';

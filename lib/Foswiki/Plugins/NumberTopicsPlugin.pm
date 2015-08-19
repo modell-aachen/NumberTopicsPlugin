@@ -78,7 +78,6 @@ sub beforeSaveHandler {
     my $fieldname = $Foswiki::cfg{Plugins}{NumberTopicsPlugin}{FieldName} || 'Number';
     my $formreg = $Foswiki::cfg{Plugins}{NumberTopicsPlugin}{Form} || '^DocumentForm$';
     my $condition = $Foswiki::cfg{Plugins}{NumberTopicsPlugin}{Condition};
-    my $admins = $Foswiki::cfg{Plugins}{NumberTopicsPlugin}{NumberAdminGroup} || 'AdminGroup';
     my $query = Foswiki::Func::getCgiQuery();
 
     my $form = $meta->get( 'FORM' );
@@ -94,7 +93,7 @@ sub beforeSaveHandler {
             $meta->remove( 'FIELD', $fieldname );
             $numberValue = '';
         }
-        unless( Foswiki::Func::isGroupMember( $admins ) || Foswiki::Func::isAnAdmin() ) {
+        unless( isEditable() ) {
             if( Foswiki::Func::topicExists( $web, $topic ) ) {
                 my ($oldMeta, $oldText) = Foswiki::Func::readTopic( $web, $topic );
                 my $oldNumber = $oldMeta->get( 'FIELD', $fieldname );
@@ -127,6 +126,12 @@ sub beforeSaveHandler {
 
     # save number
     $meta->putKeyed( 'FIELD', { name=>$fieldname, title=>$fieldname, value=>$value } );
+}
+
+sub isEditable {
+    my $admins = $Foswiki::cfg{Plugins}{NumberTopicsPlugin}{NumberAdminGroup} || 'AdminGroup';
+
+    return ((Foswiki::Func::isGroupMember( $admins ) || Foswiki::Func::isAnAdmin()) ? 1 : 0);
 }
 
 sub _getNumber {

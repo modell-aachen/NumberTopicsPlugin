@@ -211,6 +211,65 @@ sub indexAttachmentHandler {
     _index($meta, $doc);
 }
 
+sub _checkDuplicates {
+    my ($field, $topicObject) = @_;
+
+    my $thisTopic = $topicObject->topic;
+    my $thisWeb = $topicObject->web;
+
+    my $request = Foswiki::Func::getRequestObject();
+
+    my $thisField = $topicObject->get('FIELD', $field->{name});
+    my $enteredValue;
+    if($request->param('templatetopic')) {
+        $topicObject->remove($field->{name}) if $thisField;
+    } else {
+        $enteredValue = $thisField->{value} if $thisField;
+    }
+
+    return unless defined $enteredValue;
+    return if $enteredValue eq '';
+
+    # Skipword ('none' etc.)
+    my @skip;
+    my $list;
+    if($field->{value} =~ m#skip\s*=\s*"((?:\\"|[^"])*)"#) {
+        $list = $1;
+    } else {
+        $list = $Foswiki::cfg{Plugins}{NumberTopicsPlugin}{UniqueSkip};
+    }
+    if(defined $list) {
+        $list =~ s#\\"#"#g;
+        $list = Foswiki::Func::decodeFormatTokens($list);
+        $list =~ s#^\s*##;
+        $list =~ s#\s*$##;
+        @skip = split(/\s*,\s*/, $list) if $list ne '';
+        foreach my $item ( @skip ) {
+            return if($enteredValue eq $item);
+        }
+    }
+
+    # value is always ok if it didn't change, assuming it was unique before
+    if( Foswiki::Func::topicExists( $thisWeb, $thisTopic ) ) {
+        my ($oldMeta, $oldText) = Foswiki::Func::readTopic( $thisWeb, $thisTopic );
+        my $oldValue = $oldMeta->get( 'FIELD', $field->{name} );
+        return if defined $oldValue && $enteredValue eq $oldValue->{value};
+    }
+
+    # check if value is unique
+    my $results = Foswiki::Func::query("(META:FORM.name='$field->{topic}' OR META:FORM.name='$field->{web}.$field->{topic}') AND META:FIELD.name='$field->{name}' AND META:FIELD.value='$enteredValue'", undef, { web => $thisWeb, type => 'query', excludetopic => $thisTopic });
+    if($results->hasNext()) {
+        my $found = '';
+        while($results->hasNext()) {
+            $found .= $results->next;
+            $found .= ', ' if($results->hasNext());
+        }
+        return "Number $enteredValue for field $field->{name} already in use here: $found";
+    }
+
+    return undef;
+}
+
 1;
 
 __END__

@@ -34,6 +34,16 @@ Parameters:
 | TopicNr | autoincrement | | condition="$percentIF{\"$WORKFLOWMETA='APPROVED'\" then=\"1\" else=\"0\"}$percent" | Unique topic number, only for approved documents | |
 </verbatim> |
 
+---+++ Unique
+
+This field must be unique. A =%%NOP%SEARCH{...}%%NOP%= will be performed to find dublicates when saving the topic.
+
+Parameters:
+| *Name* | *Explaination* | *Example* |
+| =skip= | These words can be entered in unique fields of all topics (they are _not_ unique).%BR%Comma separated list, standard format tokens can be used. | <verbatim>
+| UniqueNr | unique | | skip="(none), No \"magic\" here!" | Unique topic number | |
+</verbatim> |
+
 ---++ Implicit numbering
 
 When setting ={Plugins}{NumberTopicsPlugin}{Form}= and ={Plugins}{NumberTopicsPlugin}{FormField}= in configure, all field matching will be handleled as if they were of the type =autoincrement=

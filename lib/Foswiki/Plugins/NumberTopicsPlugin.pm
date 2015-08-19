@@ -135,14 +135,15 @@ sub isEditable {
 }
 
 sub _getNumber {
-    my $file = $Foswiki::cfg{Plugins}{NumberTopicsPlugin}{NumberFile};
+    my $suffix = shift || '';
+    my $file = $Foswiki::cfg{Plugins}{NumberTopicsPlugin}{NumberFile} . $suffix;
     unless ($file) {
         Foswiki::Func::writeWarning("No NumberFile configured");
         return undef;
     }
     my $returnValue;
     my $exist = (( -e $file ) ? 1 : 0 );
-    open FILE, "+<", $file;
+    open FILE, ($exist ? "+<" : ">" ), $file;
     flock(FILE, 2);
     unless( $exist ) {
         $returnValue = '0';

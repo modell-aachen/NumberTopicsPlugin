@@ -9,9 +9,8 @@ One line description, required for extensions repository catalog.
 
 %TOC%
 
----++ Start daemon
+---++ New form types
 
-This plugin requires TaskDaemonPlugin and needs a worker started with =MW_DEPARTMENT=NumberTopicsPlugin=.
 
 ---++ Preferences
 
@@ -27,13 +26,13 @@ Please set these preferences is configure:
 
 ---++ Info
 
-|  Author: | StephanOsthold |
-|  Copyright: | %$CREATEDYEAR%, StephanOsthold, All Rights Reserved |
+|  Author: | Modell Aachen GmbH |
+|  Copyright: | %$CREATEDYEAR%, Modell Aachen GmbH, All Rights Reserved |
 |  License: | GPL ([[http://www.gnu.org/copyleft/gpl.html][GNU General Public License]]) |
 |  Dependencies: | %$DEPENDENCIES% |
 |  Version: | %$VERSION% |
 |  Release: | %$RELEASE% |
 |  Change&nbsp;History: | <!-- versions below in reverse order -->&nbsp; |
 |  1.0.0 (%$CREATEDATE%): | Initial version |
-|  Home: | http://foswiki.org/Extensions/%TOPIC% |
-|  Support: | http://foswiki.org/Support/%TOPIC% |
+|  Home: | http://modell-aachen.de |
+|  Support: | http://modell-aachen.de |

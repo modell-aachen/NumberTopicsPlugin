@@ -53,7 +53,7 @@ sub beforeEditHandler {
 
     my $query = Foswiki::Func::getCgiQuery();
     if($meta && $query->param('templatetopic')) {
-        my $fieldname = $Foswiki::cfg{Plugins}{NumberTopicsPlugin}{FieldName} || 'Number';
+        my $fieldname = $Foswiki::cfg{Plugins}{NumberTopicsPlugin}{FieldName};
         $meta->remove( 'FIELD', $fieldname );
     }
 }
@@ -75,8 +75,10 @@ sub beforeSaveHandler {
 
     return if $Foswiki::cfg{Plugins}{NumberTopicsPlugin}{Disabled};
 
-    my $fieldname = $Foswiki::cfg{Plugins}{NumberTopicsPlugin}{FieldName} || 'Number';
-    my $formreg = $Foswiki::cfg{Plugins}{NumberTopicsPlugin}{Form} || '^DocumentForm$';
+    my $fieldname = $Foswiki::cfg{Plugins}{NumberTopicsPlugin}{FieldName};
+    my $formreg = $Foswiki::cfg{Plugins}{NumberTopicsPlugin}{Form};
+    return unless $fieldname && $formreg;
+
     my $condition = $Foswiki::cfg{Plugins}{NumberTopicsPlugin}{Condition};
     my $query = Foswiki::Func::getCgiQuery();
 
@@ -170,8 +172,9 @@ sub _getNumber {
 sub _index {
     my ($meta, $doc) = @_;
 
-    my $fieldname = $Foswiki::cfg{Plugins}{NumberTopicsPlugin}{FieldName} || 'Number';
-    my $formreg = $Foswiki::cfg{Plugins}{NumberTopicsPlugin}{Form} || '^DocumentForm$';
+    my $fieldname = $Foswiki::cfg{Plugins}{NumberTopicsPlugin}{FieldNamePadding};
+    my $formreg = $Foswiki::cfg{Plugins}{NumberTopicsPlugin}{FormPadding};
+    return unless $fieldname && $formreg;
 
     my $form = $meta->get( 'FORM' );
     return unless $form;

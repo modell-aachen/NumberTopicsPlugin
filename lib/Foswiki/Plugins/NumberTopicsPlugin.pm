@@ -166,6 +166,7 @@ sub _getNumber {
     return $returnValue;
 }
 
+# XXX This works only for the implicit numbering
 sub _index {
     my ($meta, $doc) = @_;
 

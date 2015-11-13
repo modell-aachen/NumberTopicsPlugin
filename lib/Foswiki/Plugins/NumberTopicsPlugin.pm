@@ -286,7 +286,8 @@ sub _rest_editautoinc {
     my $target = $q->param('targettopic');
     $q->delete('targettopic');
 
-    $target =~ s/\$\{(\w+)\}/_getNumber('_'.$1)/e;
+    my $padding;
+    $target =~ s/\$\{(\w+)(?::(\d))?\}/$padding = $2 || 1; sprintf("%0${padding}d", _getNumber('_'.$1))/e;
 
     unless ($q->param('t')) {
         $q->param('t', scalar time);

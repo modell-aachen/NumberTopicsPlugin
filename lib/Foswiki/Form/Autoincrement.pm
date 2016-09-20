@@ -31,7 +31,7 @@ sub isMandatory { 0 }
 # Returns an id that will be suffixed to the number-filename
 # Defaults to _FormsWeb_FormTopic, will be overwritten by 'id' in form definition.
 sub _getId {
-    my ( $this ) = @_;
+    my ( $this, $prefix ) = @_;
 
     unless($this->{id}) {
         if($this->{value} =~ m#\bid\s*=\s*"([^"]+)"\b# || $this->{value} =~ m#\bid\s*=\s*(\S)+\b#) {
@@ -42,6 +42,9 @@ sub _getId {
         $this->{id} =~ s#[^a-zA-Z0-9_]##g;
         $this->{id} =~ m#([a-zA-Z0-9_]*)#; # untaint
         $this->{id} = $1;
+    }
+    if($format) {
+        return $this->{id} . '_' . $prefix;
     }
     return $this->{id};
 }
@@ -125,8 +128,22 @@ sub beforeSaveHandler {
         }
 
         if($condition) {
-            # get number from -deamon- me, its ME who gets the number! Me ME MEEEEE!
-            my $response = Foswiki::Plugins::NumberTopicsPlugin::_getNumber($this->_getId());
+
+            # by_Field
+            my ($byField, $mapping, $prefix);
+            if($this->{value} =~ /by_(.*)\s*=\s*"(.*)"/) {
+                $byField = $1;
+                $mapping = $2;
+            }
+            if($byField) {
+                my $fieldValue = $topicObject->get('FIELD', $byField);
+                if($mapping =~ m/$fieldValue->{value}=([^,]*)/){
+                    $prefix = $1;
+                }
+            }
+
+                # get number from -deamon- me, its ME who gets the number! Me ME MEEEEE!
+            my $response = Foswiki::Plugins::NumberTopicsPlugin::_getNumber($this->_getId($prefix));
 
             my $value = $response;
             unless($value) {
@@ -149,7 +166,7 @@ sub beforeSaveHandler {
             $thisField = {
                 name => $this->{name},
                 title => $this->{name},
-                value => $value,
+                value => $prefix . $value,
             };
             $topicObject->putKeyed('FIELD', $thisField);
         }

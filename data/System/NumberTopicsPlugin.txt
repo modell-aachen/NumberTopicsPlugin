@@ -21,8 +21,11 @@ Parameters:
 | *Name* | *Explaination* | *Example* |
 | =id= | This is an identifier for the _number_.%BR%If you want to share a number among multiple forms, you need to set this.%BR%The id defaults to =%NOP%_&lt;form's web&gt;_&lt;form topic&gt;_&lt;field name&gt;=, so if you have a =Processes.DocumentForm= with the following contents:<verbatim>
 | TopicNr | autoincrement | | | Unique topic nr. | |
-</verbatim>, the =id= will be =%NOP%_%NOP%Processes_DocumentForm_TopicNr=.%BR%The id will be filtered by the following character class: =[a-zA-Z0-9_]=. | <verbatim>
+</verbatim>, the =id= will be =%NOP%_%NOP%Processes_DocumentForm_TopicNr=.%BR%When you use a prefix by a field (see =by_&lt;field_name&gt;=) every field has its own id. The prefix is added to the end of the id (_prefix).%BR%The id will be filtered by the following character class: =[a-zA-Z0-9_]=. | <verbatim>
 | TopicNr | autoincrement | | id="MyId" | My unique number | |
+</verbatim> |
+| =by_&lt;field_name&gt;= | This is an conditional prefix by field content. =field_name= is the name of the field which content you like to map to a specific prefix. As values you must specify an value\=prefix mapping | <verbatim>
+| TopicNr | autoincrement | | by_DocumentType="Process description=PB,Info page=I" | My unique number | |
 </verbatim> |
 | =EmptyFieldMessage= | This is a message, that will be displayed instead of an edit field, when there is no number yet.%BR%It will default to the message set in configure (={Plugins}{NumberTopicsPlugin}{EmptyFieldMessage}=). | <verbatim>
 | TopicNr | autoincrement | | EmptyFieldMessage="Will be filled out by \"magic\"!" | Unique topic number | |

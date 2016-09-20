@@ -1,0 +1,8 @@
+!noci
+data/System/NumberTopicsPlugin.txt 0644 Documentation page
+lib/Foswiki/Form/Autoincrement.pm 0444
+lib/Foswiki/Form/Randomunique.pm 0444
+lib/Foswiki/Form/Unique.pm 0444 Configuration
+lib/Foswiki/Plugins/NumberTopicsPlugin.pm 0444 Perl module
+lib/Foswiki/Plugins/NumberTopicsPlugin/Config.spec 0444 Configuration
+pub/System/NumberTopicsPlugin/autoincrementedit.js 0444

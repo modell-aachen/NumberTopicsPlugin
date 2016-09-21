@@ -43,7 +43,7 @@ sub _getId {
         $this->{id} =~ m#([a-zA-Z0-9_]*)#; # untaint
         $this->{id} = $1;
     }
-    if($format) {
+    if($prefix) {
         return $this->{id} . '_' . $prefix;
     }
     return $this->{id};
@@ -131,7 +131,7 @@ sub beforeSaveHandler {
 
             # by_Field
             my ($byField, $mapping, $prefix);
-            if($this->{value} =~ /by_(.*)\s*=\s*"(.*)"/) {
+            if($this->{value} =~ /by_(.*)\s*=\s*"(.*?)"/) {
                 $byField = $1;
                 $mapping = $2;
             }
@@ -142,7 +142,7 @@ sub beforeSaveHandler {
                 }
             }
 
-                # get number from -deamon- me, its ME who gets the number! Me ME MEEEEE!
+            # get number from -deamon- me, its ME who gets the number! Me ME MEEEEE!
             my $response = Foswiki::Plugins::NumberTopicsPlugin::_getNumber($this->_getId($prefix));
 
             my $value = $response;

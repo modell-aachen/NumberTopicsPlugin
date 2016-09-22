@@ -130,7 +130,8 @@ sub beforeSaveHandler {
         if($condition) {
 
             # by_Field
-            my ($byField, $mapping, $prefix);
+            my ($byField, $mapping);
+            my $prefix = '';
             if($this->{value} =~ /by_(.*)\s*=\s*"(.*?)"/) {
                 $byField = $1;
                 $mapping = $2;

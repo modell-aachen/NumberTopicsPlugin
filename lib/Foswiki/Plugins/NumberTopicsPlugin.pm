@@ -28,6 +28,12 @@ sub initPlugin {
         return 0;
     }
 
+    Foswiki::Func::registerRESTHandler('editautoinc', \&_rest_editautoinc,
+        authenticate => 0,
+        validate => 0,
+        http_allow => 'GET,POST',
+    );
+
     # Copy/Paste/Modify from MetaCommentPlugin
     # SMELL: this is not reliable as it depends on plugin order
     # if (Foswiki::Func::getContext()->{SolrPluginEnabled}) {
@@ -271,6 +277,24 @@ sub _checkDuplicates {
     }
 
     return undef;
+}
+
+sub _rest_editautoinc {
+    my ($session, $subject, $verb, $response) = @_;
+    my $q = $session->{request};
+
+    my $target = $q->param('targettopic');
+    $q->delete('targettopic');
+
+    my $padding;
+    $target =~ s/\$\{(\w+)(?::(\d))?\}/$padding = $2 || 1; sprintf("%0${padding}d", _getNumber('_'.$1))/e;
+
+    unless ($q->param('t')) {
+        $q->param('t', scalar time);
+    }
+
+    $session->redirect($session->getScriptUrl(1, 'edit', $q->param('targetweb') || $session->{webName}, $target), 1);
+    return '';
 }
 
 1;

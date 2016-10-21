@@ -1,0 +1,90 @@
+%META:TOPICPARENT{name="Plugins"}%
+<!--
+One line description, required for extensions repository catalog.
+   * Set SHORTDESCRIPTION = %$SHORTDESCRIPTION%
+-->
+---+!! Empty Plugin
+
+%SHORTDESCRIPTION%
+
+%TOC%
+
+---++ New form types
+
+This plugin adds several new form types, for creating (unique) topic identifiers.
+
+---+++ Autoincrement
+
+This field will be automatically filled with a unique number. The number will increment for each created topic.
+
+Parameters:
+| *Name* | *Explaination* | *Example* |
+| =id= | This is an identifier for the _number_.%BR%If you want to share a number among multiple forms, you need to set this.%BR%The id defaults to =%NOP%_&lt;form's web&gt;_&lt;form topic&gt;_&lt;field name&gt;=, so if you have a =Processes.DocumentForm= with the following contents:<verbatim>
+| TopicNr | autoincrement | | | Unique topic nr. | |
+</verbatim>, the =id= will be =%NOP%_%NOP%Processes_DocumentForm_TopicNr=.%BR%When you use a prefix by a field (see =by_&lt;field_name&gt;=) every field has its own id. The prefix is added to the end of the id (_prefix).%BR%The id will be filtered by the following character class: =[a-zA-Z0-9_]=. | <verbatim>
+| TopicNr | autoincrement | | id="MyId" | My unique number | |
+</verbatim> |
+| =by_&lt;field_name&gt;= | This is an conditional prefix by field content. =field_name= is the name of the field which content you like to map to a specific prefix. As values you must specify an value\=prefix mapping | <verbatim>
+| TopicNr | autoincrement | | by_DocumentType="Process description=PB,Info page=I" | My unique number | |
+</verbatim> |
+| =EmptyFieldMessage= | This is a message, that will be displayed instead of an edit field, when there is no number yet.%BR%It will default to the message set in configure (={Plugins}{NumberTopicsPlugin}{EmptyFieldMessage}=). | <verbatim>
+| TopicNr | autoincrement | | EmptyFieldMessage="Will be filled out by \"magic\"!" | Unique topic number | |
+</verbatim> |
+| =padding= | Numbers will be padded with zeros up to this many digits, eg. if =padding=6= and the number =123= will be padded to =000123=.%BR%Defaults to the value set in configure (={Plugins}{NumberTopicsPlugin}{padding}=. | <verbatim>
+| TopicNr | autoincrement | | padding=6 | Unique topic number | |
+</verbatim> |
+| =condition= | When this condition is not met, no number will be assigned. Defaults to the value set in configure (={Plugins}{NumberTopicsPlugin}{Condition}=). | <verbatim>
+| TopicNr | autoincrement | | condition="$percentIF{\"$WORKFLOWMETA='APPROVED'\" then=\"1\" else=\"0\"}$percent" | Unique topic number, only for approved documents | |
+</verbatim> |
+
+---+++ Unique
+
+This field must be unique. A =%%NOP%SEARCH{...}%%NOP%= will be performed to find dublicates when saving the topic.
+
+Parameters:
+| *Name* | *Explaination* | *Example* |
+| =skip= | These words can be entered in unique fields of all topics (they are _not_ unique).%BR%Comma separated list, standard format tokens can be used. | <verbatim>
+| UniqueNr | unique | | skip="(none), No \"magic\" here!" | Unique topic number | |
+</verbatim> |
+
+---+++ Randomunique
+
+This field will be filled with a random unique number. A =%%NOP%SEARCH{...}%%NOP%= will be performed to find dublicates when saving the topic.
+
+Parameters:
+| *Name* | *Explaination* | *Example* |
+| =skip= | These words can be entered (if in ={NumberAdminGroup}=) in randomunique fields of all topics (they are _not_ unique).%BR%See =unique= | See =unique= |
+| =condition= | See =autoincrement=. | See =autoincrement=. |
+
+---++ Implicit numbering
+
+When setting ={Plugins}{NumberTopicsPlugin}{Form}= and ={Plugins}{NumberTopicsPlugin}{FormField}= in configure, all field matching will be handleled as if they were of the type =autoincrement=
+
+---++ Preferences
+
+Please set these preferences is configure:
+| *Setting* | *Example* | *Explaination* |
+| ={Plugins}{NumberTopicsPlugin}{Form}= | =DocumentsForm= | A regular expression the form attached to the document must match for implicit numbering. |
+| ={Plugins}{NumberTopicsPlugin}{FormField}= | =Number= | Which FormField the number should be written into, only for implicit numbering. |
+| ={Plugins}{NumberTopicsPlugin}{NumberFile}= | =/var/www/qwiki/TopicNumberPlugin.cfg= | This file will hold the last assigned number. Do not delete it. Must be writable by your webserver. For =autoincrement= form fields the =id= will be appended to the filename. |
+| ={Plugins}{NumberTopicsPlugin}{NumberAdminGroup}= | =KeyUserGroup= | People in this group are allowed to manipulate assigned numbers. Members of AdminGroup are always allowed. |
+| ={Plugins}{NumberTopicsPlugin}{Condition}= | %%NOP%IF{"$WORKFLOWMETA='APPROVED' then="1" else="0"}%NOP%% | Only Generate a number if this condition is empty (disabled) or expands to perl-true. |
+| ={Plugins}{NumberTopicsPlugin}{padding}= | 6 | Assigned numbers will be padded with zeros up to this many places. |
+| ={Plugins}{NumberTopicsPlugin}{Disabled}= | 1 | This will disable this plugin's functionality. |
+| ={Plugins}{NumberTopicsPlugin}{EmptyFieldMessage}= | This is "magic"! | Default message that will be displayed, when a field is not filled out.%BR%Defaults to _(will be automatically assigned)_ |
+
+---++ Installation
+%$INSTALL_INSTRUCTIONS%
+
+---++ Info
+
+|  Author: | Modell Aachen GmbH |
+|  Copyright: | %$CREATEDYEAR%, Modell Aachen GmbH, All Rights Reserved |
+|  License: | GPL ([[http://www.gnu.org/copyleft/gpl.html][GNU General Public License]]) |
+|  Dependencies: | %$DEPENDENCIES% |
+|  Version: | %$VERSION% |
+|  Release: | %$RELEASE% |
+|  Change&nbsp;History: | <!-- versions below in reverse order -->&nbsp; |
+|  1.0.0 (%$CREATEDATE%): | Initial version |
+|  Home: | http://modell-aachen.de |
+|  Support: | http://modell-aachen.de |

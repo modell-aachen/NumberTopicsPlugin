@@ -34,7 +34,7 @@ sub _getId {
     my ( $this, $prefix ) = @_;
 
     unless($this->{id}) {
-        if($this->{value} =~ m#\bid\s*=\s*"([^"]+)"\b# || $this->{value} =~ m#\bid\s*=\s*(\S)+\b#) {
+        if($this->{value} =~ m#(?:^|\s+)id\s*=\s*"([^"]+)"# || $this->{value} =~ m#\bid\s*=\s*(\S+)\b#) {
             $this->{id} = $1;
         } else {
             $this->{id} = '_' . $this->{web} . '_' . $this->{topic} . '_' . $this->{name};

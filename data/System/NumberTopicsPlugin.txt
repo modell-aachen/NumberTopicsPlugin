@@ -68,7 +68,7 @@ Please set these preferences is configure:
 | ={Plugins}{NumberTopicsPlugin}{FormField}= | =Number= | Which FormField the number should be written into, only for implicit numbering. |
 | ={Plugins}{NumberTopicsPlugin}{NumberFile}= | =/var/www/qwiki/TopicNumberPlugin.cfg= | This file will hold the last assigned number. Do not delete it. Must be writable by your webserver. For =autoincrement= form fields the =id= will be appended to the filename. |
 | ={Plugins}{NumberTopicsPlugin}{NumberAdminGroup}= | =KeyUserGroup= | People in this group are allowed to manipulate assigned numbers. Members of AdminGroup are always allowed. |
-| ={Plugins}{NumberTopicsPlugin}{Condition}= | %%NOP%IF{"$WORKFLOWMETA='APPROVED' then="1" else="0"}%NOP%% | Only Generate a number if this condition is empty (disabled) or expands to perl-true. |
+| ={Plugins}{NumberTopicsPlugin}{Condition}= | %%NOP%IF{"$WORKFLOWMETA='APPROVED'" then="1" else="0"}%NOP%% | Only Generate a number if this condition is empty (disabled) or expands to perl-true. |
 | ={Plugins}{NumberTopicsPlugin}{padding}= | 6 | Assigned numbers will be padded with zeros up to this many places. |
 | ={Plugins}{NumberTopicsPlugin}{Disabled}= | 1 | This will disable this plugin's functionality. |
 | ={Plugins}{NumberTopicsPlugin}{EmptyFieldMessage}= | This is "magic"! | Default message that will be displayed, when a field is not filled out.%BR%Defaults to _(will be automatically assigned)_ |
